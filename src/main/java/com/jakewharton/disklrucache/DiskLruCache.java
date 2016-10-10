@@ -353,7 +353,14 @@ public final class DiskLruCache implements Closeable {
     if (journalWriter != null) {
       journalWriter.close();
     }
-
+    
+    /*
+    * direct use new FileOutputStream(path) may case FileNotFoundException
+    */
+    File tmpFile = new File(journalFileTmp);
+    if (!tmpFile.exists()) {
+			tmpFile.createNewFile();
+    }
     Writer writer = new BufferedWriter(
         new OutputStreamWriter(new FileOutputStream(journalFileTmp), Util.US_ASCII));
     try {
